@@ -100,8 +100,8 @@ export function DisruptionModal({
               onClick={() => applyPreset('core_demo')}
               className="p-3 rounded-2xl bg-red-50/70 border border-red-200 hover:border-red-400 text-red-700 text-xs font-medium text-left transition-colors cursor-pointer"
             >
-              <span className="block font-black text-red-800">★ Primary Pitch</span>
-              <span className="text-slate-600">120m Flight Delay</span>
+              <span className="block font-black text-red-800">★ Flight Delay</span>
+              <span className="text-slate-600">DL 412 (+120m)</span>
             </button>
             <button
               type="button"

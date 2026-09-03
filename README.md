@@ -135,10 +135,10 @@ ANTHROPIC_API_KEY=""
 
 ---
 
-## 🎬 3-Minute Hackathon Demo Script
+## 🎬 Product Walkthrough & Recovery Workflow
 
 1. **Sign In (15s)**:
-   - Go to `http://localhost:3000/login` and click **"Alex Mercer (Primary Pitch Itinerary)"** for instant 1-click sign in.
+   - Go to `http://localhost:3000/login` and click **"Alex Mercer (Primary Itinerary)"** for instant 1-click sign in.
 2. **Topology Inspection (30s)**:
    - On the dashboard, switch between **Timeline** and **Graph (DAG)** view.
    - Point out the auto-inferred dependency edges, buffer slack badges (e.g. `105m slack`), and node status rings.
@@ -147,7 +147,7 @@ ANTHROPIC_API_KEY=""
    - *"Notice it warns us about tight layovers (<20 min headroom) before any flight is even delayed."*
 4. **Trigger Disruption (20s)**:
    - Click the red **"Simulate Disruption"** button in the navbar.
-   - Select **"Primary Pitch: 120m Flight Delay"** (DL 412 delayed by 120m) and click **"Simulate & Trigger Ripple Analysis"**.
+   - Select **"120m Flight Delay Scenario"** (DL 412 delayed by 120m) and click **"Simulate & Trigger Ripple Analysis"**.
 5. **BFS Impact Cascade (30s)**:
    - The **Active Travel Disruption** banner highlights the root cause (+120m delay) and the **4 downstream ripple effects**:
      - ✈️ **Missed connection**: Flight JFK → LHR (VS 004) departs 15m before delayed arrival.

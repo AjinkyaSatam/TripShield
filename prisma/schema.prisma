@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  password  String    // Hashed
+  role      String    @default("TRAVELER") // TRAVELER | TRAVEL_MANAGER | ADMIN
+  company   String?   @default("Enterprise Corp")
+  tier      String    @default("Diamond Shield VIP")
+  phone     String?
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  trips     Trip[]
+  sessions  Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+  createdAt    DateTime @default(now())
+}
+
+model Trip {
+  id          String            @id @default(cuid())
+  userId      String?
+  user        User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  travelerId  String            @default("traveler_1")
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  bookings    Booking[]
+  disruptions DisruptionEvent[]
+}
+
+model Booking {
+  id                 String            @id @default(cuid())
+  tripId             String
+  trip               Trip              @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  type               String            // FLIGHT | HOTEL | TRANSFER | ACTIVITY | EVENT
+  provider           String
+  title              String
+  startTime          DateTime
+  endTime            DateTime
+  location           String
+  status             String            @default("confirmed") // confirmed | at_risk | disrupted | cancelled | rebooked
+  cost               Float
+  cancellationPolicy String            @default("Standard cancellation policy")
+  refundable         Boolean           @default(true)
+  details            String?           // JSON string for flight number, room type, notes, etc.
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  dependsOn          BookingLink[]     @relation("ToBooking")
+  outgoingLinks      BookingLink[]     @relation("FromBooking")
+  disruptions        DisruptionEvent[]
+}
+
+model BookingLink {
+  id                       String   @id @default(cuid())
+  fromBookingId            String
+  toBookingId              String
+  fromBooking              Booking  @relation("FromBooking", fields: [fromBookingId], references: [id], onDelete: Cascade)
+  toBooking                Booking  @relation("ToBooking", fields: [toBookingId], references: [id], onDelete: Cascade)
+  relationType             String   // connects_to | requires_checkin_before | same_day | transfer_needed
+  bufferMinutes            Int      // Available slack minutes between fromBooking.endTime and toBooking.startTime
+  minRequiredBufferMinutes Int      // Minimum required threshold for safe connection
+  createdAt                DateTime @default(now())
+}
+
+model DisruptionEvent {
+  id            String         @id @default(cuid())
+  tripId        String
+  bookingId     String
+  trip          Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  booking       Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  type          String         // delay | cancellation | overbooking | weather
+  delayMinutes  Int?
+  reason        String
+  timestamp     DateTime       @default(now())
+  status        String         @default("active") // active | resolved
+  recoveryPlans RecoveryPlan[]
+}
+
+model RecoveryPlan {
+  id                String          @id @default(cuid())
+  disruptionEventId String
+  disruptionEvent   DisruptionEvent @relation(fields: [disruptionEventId], references: [id], onDelete: Cascade)
+  generatedAt       DateTime        @default(now())
+  status            String          @default("generated") // generated | applied
+  options           RecoveryOption[]
+}
+
+model RecoveryOption {
+  id                    String       @id @default(cuid())
+  planId                String
+  plan                  RecoveryPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  rank                  Int
+  title                 String
+  description           String
+  totalCost             Float
+  costDelta             Float
+  timeDelta             Int          // In minutes (+ for later, - for earlier)
+  convenienceScore      Float        // 0 to 100
+  itineraryDisruptionPct Float       // Proportion of trip still impacted (0.0 = perfect recovery)
+  actions               String       // JSON string of RecoveryAction[]
+  rationale             String       // Natural language reasoning
+  caveats               String?      // Important notes / warnings
+  isApplied             Boolean      @default(false)
+  createdAt             DateTime     @default(now())
+}
+
+model MockInventoryItem {
+  id                 String    @id @default(cuid())
+  category           String    // FLIGHT | HOTEL | TRANSFER | ACTIVITY
+  provider           String
+  name               String
+  location           String
+  startTime          DateTime?
+  endTime            DateTime?
+  cost               Float
+  cancellationPolicy String    @default("Flexible")
+  refundable         Boolean   @default(true)
+  metadata           String?   // JSON string with extra details (seat class, terminal, vehicle type, etc.)
+  createdAt          DateTime  @default(now())
+}

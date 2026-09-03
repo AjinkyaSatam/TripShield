@@ -180,7 +180,7 @@ export default function LoginPage() {
                     AM
                   </div>
                   <div>
-                    <span className="font-bold text-slate-900 text-xs block group-hover:text-red-600 transition-colors">
+                    <span suppressHydrationWarning className="font-bold text-slate-900 text-xs block group-hover:text-red-600 transition-colors">
                       Alex Mercer (Primary Itinerary)
                     </span>
                     <span className="text-[10px] text-slate-500">Solo Executive • Diamond Shield VIP</span>

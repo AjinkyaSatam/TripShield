@@ -63,7 +63,7 @@ export function ConfirmationDiffModal({
         <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-2 gap-3 text-center">
           <div>
             <span className="text-xs text-slate-500 font-bold block mb-1">Cost Adjustment</span>
-            <span className={`text-lg font-black font-mono ${
+            <span className={`text-lg font-black tabular-nums ${
               diff.totalCostDelta > 0
                 ? 'text-red-600'
                 : diff.totalCostDelta < 0
@@ -76,7 +76,7 @@ export function ConfirmationDiffModal({
 
           <div>
             <span className="text-xs text-slate-500 font-bold block mb-1">Bookings Reconciled</span>
-            <span className="text-lg font-black text-blue-600 font-mono">
+            <span className="text-lg font-black text-blue-600 tabular-nums">
               {diff.changedBookings.length} Node(s) Updated
             </span>
           </div>

@@ -44,7 +44,7 @@ export function ProactiveRiskPanel({ risks }: ProactiveRiskPanelProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 border border-amber-300 font-mono font-bold">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 border border-amber-300 font-bold">
             {highRisks.length} High Risk
           </span>
           <button className="text-amber-800 hover:text-amber-950 p-1">

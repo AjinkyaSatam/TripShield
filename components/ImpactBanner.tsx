@@ -26,7 +26,7 @@ export function ImpactBanner({
               <span className="text-xs font-black uppercase tracking-widest text-red-700 bg-white px-3 py-1 rounded-full shadow-xs">
                 Travel Disruption Detected
               </span>
-              <span className="text-xs font-mono text-white/90">
+              <span className="text-xs text-white/90">
                 Logged at: {new Date(impact.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
@@ -37,7 +37,7 @@ export function ImpactBanner({
           </h2>
 
           <div className="flex items-center gap-3 text-xs sm:text-sm text-white/90 flex-wrap font-medium">
-            <span className="flex items-center gap-1.5 text-white font-bold font-mono bg-black/20 px-2.5 py-0.5 rounded-lg">
+            <span className="flex items-center gap-1.5 text-white font-bold tabular-nums bg-black/20 px-2.5 py-0.5 rounded-lg">
               <Clock size={16} />
               +{impact.delayMinutes} min arrival delay
             </span>
@@ -87,7 +87,7 @@ export function ImpactBanner({
               className="p-4 rounded-2xl bg-white text-slate-900 border border-red-100 shadow-md text-xs space-y-2"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] text-slate-500 font-bold uppercase">
+                <span className="text-[10px] text-slate-500 font-bold uppercase">
                   Ripple #{idx + 1}
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-black ${

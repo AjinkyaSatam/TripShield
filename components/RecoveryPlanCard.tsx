@@ -54,7 +54,7 @@ export function RecoveryPlanCard({
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
                 Option #{option.rank}
               </span>
               <span className="text-xs font-bold text-emerald-600">
@@ -95,7 +95,7 @@ export function RecoveryPlanCard({
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-xs font-black font-mono text-slate-900">
+                <span className="text-xs font-black tabular-nums text-slate-900">
                   {option.convenienceScore}
                 </span>
                 <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold">Score</span>
@@ -109,11 +109,11 @@ export function RecoveryPlanCard({
           <div className="flex items-start gap-2.5">
             <Sparkles size={16} className="text-red-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <span className="font-extrabold text-red-700 block text-[10px] uppercase tracking-widest font-mono">
+              <span className="font-extrabold text-red-700 block text-[10px] uppercase tracking-widest">
                 AI Recovery Rationale
               </span>
               <p className="italic text-slate-700 leading-relaxed text-xs">
-                "{option.rationale}"
+                &ldquo;{option.rationale}&rdquo;
               </p>
             </div>
           </div>
@@ -123,7 +123,7 @@ export function RecoveryPlanCard({
         <div className="grid grid-cols-3 gap-2.5 text-center">
           <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
             <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Cost Impact</span>
-            <span className={`text-base font-black font-mono ${
+            <span className={`text-base font-black tabular-nums ${
               option.costDelta > 0
                 ? 'text-red-600'
                 : option.costDelta < 0
@@ -136,14 +136,14 @@ export function RecoveryPlanCard({
 
           <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
             <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Time Drift</span>
-            <span className="text-base font-black text-slate-800 font-mono">
+            <span className="text-base font-black text-slate-800 tabular-nums">
               {formatTimeDelta(option.timeDelta)}
             </span>
           </div>
 
           <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
             <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Total Fare</span>
-            <span className="text-base font-black text-slate-900 font-mono">
+            <span className="text-base font-black text-slate-900 tabular-nums">
               {formatINR(option.totalCost)}
             </span>
           </div>
@@ -179,7 +179,7 @@ export function RecoveryPlanCard({
                       {act.actionType.toUpperCase()}: {act.targetBookingTitle}
                     </span>
                     {act.newTitle && (
-                      <p className="text-red-600 font-bold font-mono text-[11px]">➜ {act.newTitle}</p>
+                      <p className="text-red-600 font-bold text-[11px]">➜ {act.newTitle}</p>
                     )}
                     <p className="text-slate-500 text-[11px] leading-tight">{act.reason}</p>
                   </div>

@@ -171,9 +171,9 @@ export function DisruptionModal({
                   min={15}
                   max={720}
                   step={15}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-slate-900 focus:outline-none focus:border-red-500 font-mono disabled:opacity-40"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-slate-900 focus:outline-none focus:border-red-500 tabular-nums font-semibold disabled:opacity-40"
                 />
-                <span className="text-slate-500 font-mono">min</span>
+                <span className="text-slate-500 font-medium">min</span>
               </div>
             </div>
           </div>

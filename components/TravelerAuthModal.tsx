@@ -138,7 +138,7 @@ export function TravelerAuthModal({
                         <span className="font-bold text-sm text-slate-900 group-hover:text-red-600 transition-colors">
                           {t.name}
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
                           {t.badge}
                         </span>
                       </div>

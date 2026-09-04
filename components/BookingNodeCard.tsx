@@ -98,10 +98,10 @@ export function BookingNodeCard({
 
               <div>
                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono">
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                     Leg #{index + 1}
                   </span>
-                  <span className="text-xs text-red-600 font-bold tracking-wider uppercase font-mono">
+                  <span className="text-xs text-red-600 font-bold tracking-wider uppercase">
                     {node.provider}
                   </span>
                   <StatusBadge status={node.status} size="sm" />
@@ -115,7 +115,7 @@ export function BookingNodeCard({
             {/* Right: Times, Locations, Toggle */}
             <div className="flex items-center justify-between lg:justify-end gap-5">
               <div className="text-left lg:text-right">
-                <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-900 font-mono">
+                <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-900 tabular-nums">
                   <Clock size={15} className="text-red-600 shrink-0" />
                   <span>{formatTime(node.startTime)} – {formatTime(node.endTime)}</span>
                 </div>
@@ -169,8 +169,8 @@ export function BookingNodeCard({
                 </div>
               </div>
 
-              <div className="space-y-1.5 p-3.5 rounded-xl bg-slate-50 border border-slate-200 font-mono text-[11px]">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block font-sans">
+              <div className="space-y-1.5 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px]">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
                   Booking Specifications
                 </span>
                 {node.details ? (
@@ -182,7 +182,7 @@ export function BookingNodeCard({
                     {node.details.venue && <div>Venue: <strong className="text-slate-900">{node.details.venue}</strong></div>}
                   </div>
                 ) : (
-                  <p className="text-slate-500 font-sans">Active reservation confirmed with provider</p>
+                  <p className="text-slate-500">Active reservation confirmed with provider</p>
                 )}
               </div>
 
@@ -191,7 +191,7 @@ export function BookingNodeCard({
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
                     Recorded Cost
                   </span>
-                  <span className="text-xl font-black text-slate-900 font-mono flex items-center gap-0.5 mt-0.5">
+                  <span className="text-xl font-black text-slate-900 tabular-nums flex items-center gap-0.5 mt-0.5">
                     {formatINR(node.cost)}
                   </span>
                 </div>
@@ -219,7 +219,7 @@ export function BookingNodeCard({
                 {outgoingEdge.relationType.replace(/_/g, ' ')}
               </span>
               <span className="text-slate-500">
-                Slack: <strong className={`font-mono ${
+                Slack: <strong className={`tabular-nums ${
                   outgoingEdge.bufferMinutes < outgoingEdge.minRequiredBufferMinutes
                     ? 'text-red-600 font-bold'
                     : outgoingEdge.bufferMinutes - outgoingEdge.minRequiredBufferMinutes <= 15
@@ -229,7 +229,7 @@ export function BookingNodeCard({
               </span>
             </div>
 
-            <div className="text-slate-500 font-mono text-[11px]">
+            <div className="text-slate-500 text-[11px] tabular-nums">
               Min Req: {outgoingEdge.minRequiredBufferMinutes}m
               {outgoingEdge.bufferMinutes < outgoingEdge.minRequiredBufferMinutes ? (
                 <span className="ml-2 text-red-600 font-bold">(-{outgoingEdge.minRequiredBufferMinutes - outgoingEdge.bufferMinutes}m violation)</span>

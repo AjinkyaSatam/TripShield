@@ -71,7 +71,7 @@ export function ItineraryGraph({
           <div className="flex items-center gap-2.5">
             <span className="h-3 w-3 rounded-full bg-red-600 animate-ping" />
             <h2 className="text-xl font-black text-slate-900 tracking-tight">Itinerary Dependency Topology</h2>
-            <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-red-50 text-red-600 border border-red-200 font-mono uppercase tracking-wider">
+            <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-red-50 text-red-600 border border-red-200 uppercase tracking-wider">
               Connected Graph
             </span>
           </div>
@@ -90,7 +90,7 @@ export function ItineraryGraph({
             >
               <ZoomOut size={16} />
             </button>
-            <span className="text-xs px-2.5 font-mono text-slate-900 font-bold">{Math.round(zoom * 100)}%</span>
+            <span className="text-xs px-2.5 text-slate-900 font-bold tabular-nums">{Math.round(zoom * 100)}%</span>
             <button
               onClick={() => setZoom((z) => Math.min(1.4, z + 0.1))}
               className="p-1.5 hover:text-slate-900 hover:bg-white rounded-lg transition-colors"
@@ -213,7 +213,7 @@ export function ItineraryGraph({
                       fill={isEdgeDisrupted ? '#e41d2d' : isEdgeAtRisk ? '#b45309' : '#008cff'}
                       fontSize="10"
                       fontWeight="bold"
-                      fontFamily="monospace"
+                      fontFamily="var(--font-plus-jakarta), sans-serif"
                     >
                       {edge.bufferMinutes}m slack
                     </text>
@@ -286,12 +286,12 @@ export function ItineraryGraph({
                     }`}>
                       <Icon size={14} />
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 font-bold uppercase truncate">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase truncate">
                       Leg #{index + 1}
                     </span>
                   </div>
 
-                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase font-mono ${
+                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase ${
                     isDisrupted
                       ? 'bg-red-100 text-red-700 border border-red-200'
                       : isAtRisk
@@ -308,7 +308,7 @@ export function ItineraryGraph({
                   {node.title}
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 font-mono">
+                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 tabular-nums">
                   <span>{startTimeStr}</span>
                   <span className="text-slate-900 font-bold">{formatINR(node.cost)}</span>
                 </div>

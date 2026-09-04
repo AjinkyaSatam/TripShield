@@ -316,7 +316,7 @@ export default function TripShieldApp() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-tight text-slate-900">TripShield</span>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-mono uppercase">
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700 uppercase tracking-wider">
                   MakeMyTrip AI
                 </span>
               </div>
@@ -333,7 +333,7 @@ export default function TripShieldApp() {
 
           {/* Center Trip Selector */}
           <div className="hidden lg:flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-2xl text-xs font-semibold">
-            <span className="text-slate-500 font-mono text-[10px] uppercase">Itinerary:</span>
+            <span className="text-slate-500 text-[10px] uppercase font-bold">Itinerary:</span>
             <select
               value={selectedTripId}
               onChange={(e) => handleTripSwitch(e.target.value)}
@@ -399,7 +399,7 @@ export default function TripShieldApp() {
                   <div className="p-2.5 border-b border-slate-100 space-y-0.5">
                     <span className="font-bold text-slate-900 block text-sm">{travelerDisplayName}</span>
                     <span className="text-[11px] text-slate-500 block truncate">{currentUser?.email || 'alex.mercer@stratos-ai.com'}</span>
-                    <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-mono">
+                    <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">
                       {travelerDisplayTier}
                     </span>
                   </div>
@@ -459,7 +459,7 @@ export default function TripShieldApp() {
                     <span>Sep 15 – Sep 18, 2026</span>
                   </span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-red-600 font-bold font-mono">11 Connected Legs</span>
+                  <span className="text-red-600 font-bold">11 Connected Legs</span>
                 </div>
 
                 <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -477,7 +477,7 @@ export default function TripShieldApp() {
                   <span className="text-[10px] uppercase font-black tracking-wider text-emerald-700 block mb-1">
                     Confirmed
                   </span>
-                  <span className="text-2xl font-black text-emerald-800 font-mono">
+                  <span className="text-2xl font-black text-emerald-800 tabular-nums">
                     {confirmedCount}
                   </span>
                 </div>
@@ -486,7 +486,7 @@ export default function TripShieldApp() {
                   <span className="text-[10px] uppercase font-black tracking-wider text-amber-800 block mb-1">
                     At Risk
                   </span>
-                  <span className="text-2xl font-black text-amber-800 font-mono">
+                  <span className="text-2xl font-black text-amber-800 tabular-nums">
                     {atRiskCount}
                   </span>
                 </div>
@@ -495,7 +495,7 @@ export default function TripShieldApp() {
                   <span className="text-[10px] uppercase font-black tracking-wider text-red-700 block mb-1">
                     Disrupted
                   </span>
-                  <span className="text-2xl font-black text-red-700 font-mono">
+                  <span className="text-2xl font-black text-red-700 tabular-nums">
                     {disruptedCount}
                   </span>
                 </div>
@@ -504,7 +504,7 @@ export default function TripShieldApp() {
                   <span className="text-[10px] uppercase font-black tracking-wider text-blue-700 block mb-1">
                     Rebooked
                   </span>
-                  <span className="text-2xl font-black text-blue-700 font-mono">
+                  <span className="text-2xl font-black text-blue-700 tabular-nums">
                     {rebookedCount}
                   </span>
                 </div>
@@ -545,7 +545,7 @@ export default function TripShieldApp() {
 
               <div className="text-xs text-slate-600 flex items-center gap-2">
                 <span>Ranked Engine:</span>
-                <span className="font-mono text-red-700 font-bold px-3 py-1 rounded-full bg-red-50 border border-red-200">
+                <span className="text-red-700 font-bold px-3 py-1 rounded-full bg-red-50 border border-red-200">
                   {recoveryPlan.source === 'claude_ai' ? 'Claude 3.5 Sonnet' : 'Autonomous Rule Engine'}
                 </span>
               </div>
@@ -764,7 +764,7 @@ export default function TripShieldApp() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 font-mono text-xs text-slate-700">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-xs text-slate-700">
               <div className="flex justify-between border-b border-slate-200 pb-2">
                 <span>Traveler Profile:</span>
                 <span className="text-slate-900 font-bold">{travelerDisplayName}</span>

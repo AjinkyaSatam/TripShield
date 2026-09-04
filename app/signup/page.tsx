@@ -52,7 +52,7 @@ export default function SignUpPage() {
           </div>
           <div className="text-left">
             <span className="text-xl font-black text-slate-900 tracking-tight block">TripShield AI</span>
-            <span className="text-[10px] font-mono text-red-600 font-bold uppercase tracking-wider">Traveler Registration</span>
+            <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Traveler Registration</span>
           </div>
         </Link>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight pt-2">
@@ -148,7 +148,7 @@ export default function SignUpPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors font-mono"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
             </div>

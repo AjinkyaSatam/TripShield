@@ -75,7 +75,7 @@ export default function LoginPage() {
           </div>
           <div className="text-left">
             <span className="text-xl font-black text-slate-900 tracking-tight block">TripShield AI</span>
-            <span className="text-[10px] font-mono text-red-600 font-bold uppercase tracking-wider">Travel Resilience Platform</span>
+            <span className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Travel Resilience Platform</span>
           </div>
         </Link>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight pt-2">
@@ -130,7 +130,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors font-mono"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 transition-colors"
                 />
                 <button
                   type="button"
@@ -186,7 +186,7 @@ export default function LoginPage() {
                     <span className="text-[10px] text-slate-500">Solo Executive • Diamond Shield VIP</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200">
+                <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200">
                   Instant
                 </span>
               </button>
@@ -208,7 +208,7 @@ export default function LoginPage() {
                     <span className="text-[10px] text-slate-500">Family Leisure • Platinum Shield</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                   Instant
                 </span>
               </button>
@@ -230,7 +230,7 @@ export default function LoginPage() {
                     <span className="text-[10px] text-slate-500">Group Coordinator • Gold Shield</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                   Instant
                 </span>
               </button>

@@ -32,6 +32,7 @@ import {
   ExternalLink,
   Printer,
   Copy,
+  Search,
 } from 'lucide-react';
 import { GraphNode, GraphEdge, ImpactAnalysisResult, RiskWarning } from '@/lib/graph/types';
 import { FormattedRecoveryOption, GeneratedRecoveryPlan } from '@/lib/recovery/types';
@@ -68,6 +69,8 @@ export default function TripShieldApp() {
   // UI Filters & View Mode
   const [viewMode, setViewMode] = useState<'timeline' | 'graph'>('timeline');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ATTENTION' | 'CONFIRMED'>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
   const [simulateTargetId, setSimulateTargetId] = useState<string | null>(null);
   const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
@@ -297,8 +300,23 @@ export default function TripShieldApp() {
   };
 
   const filteredNodes = nodes.filter((n) => {
-    if (selectedCategoryFilter === 'ALL') return true;
-    return n.type.toUpperCase() === selectedCategoryFilter;
+    if (selectedCategoryFilter !== 'ALL' && n.type.toUpperCase() !== selectedCategoryFilter) {
+      return false;
+    }
+    if (statusFilter === 'ATTENTION' && n.status !== 'disrupted' && n.status !== 'at_risk') {
+      return false;
+    }
+    if (statusFilter === 'CONFIRMED' && n.status !== 'confirmed') {
+      return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchTitle = n.title.toLowerCase().includes(q);
+      const matchProvider = n.provider.toLowerCase().includes(q);
+      const matchLocation = n.location.toLowerCase().includes(q);
+      return matchTitle || matchProvider || matchLocation;
+    }
+    return true;
   });
 
   const confirmedCount = nodes.filter((n) => n.status === 'confirmed').length;
@@ -673,6 +691,63 @@ export default function TripShieldApp() {
             </div>
           </div>
 
+          {/* Quick Search & Attention Status Filter Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="relative flex-1">
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search bookings by flight number, airline, hotel, or city..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-8 py-2 bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-700 font-bold px-1"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden lg:inline mr-1">Status:</span>
+              <button
+                onClick={() => setStatusFilter('ALL')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  statusFilter === 'ALL'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                All Status
+              </button>
+              <button
+                onClick={() => setStatusFilter('ATTENTION')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  statusFilter === 'ATTENTION'
+                    ? 'bg-[#e41d2d] text-white shadow-xs'
+                    : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200/60'
+                }`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                <span>Attention Needed ({atRiskCount + disruptedCount})</span>
+              </button>
+              <button
+                onClick={() => setStatusFilter('CONFIRMED')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  statusFilter === 'CONFIRMED'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/60'
+                }`}
+              >
+                Confirmed ({confirmedCount})
+              </button>
+            </div>
+          </div>
+
           {/* View Render Area */}
           {isLoadingTrip ? (
             <div className="p-20 rounded-3xl border border-slate-200 bg-white text-center space-y-3 shadow-xs">
@@ -691,20 +766,37 @@ export default function TripShieldApp() {
             />
           ) : (
             <div className="space-y-4">
-              {filteredNodes.map((node, index) => (
-                <BookingNodeCard
-                  key={node.id}
-                  node={node}
-                  index={index}
-                  outgoingEdge={outgoingEdgeMap.get(node.id)}
-                  isImpacted={impactReasonMap.has(node.id)}
-                  impactReason={impactReasonMap.get(node.id)}
-                  onSimulateDisruption={(bookingId) => {
-                    setSimulateTargetId(bookingId);
-                    setIsSimulateModalOpen(true);
-                  }}
-                />
-              ))}
+              {filteredNodes.length === 0 ? (
+                <div className="p-12 rounded-3xl border border-slate-200 bg-white text-center space-y-3 shadow-xs">
+                  <p className="text-sm font-bold text-slate-800">No bookings match your current search or filters.</p>
+                  <p className="text-xs text-slate-500">Try searching for a different keyword or resetting your status filter.</p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedCategoryFilter('ALL');
+                      setStatusFilter('ALL');
+                    }}
+                    className="px-4 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-colors cursor-pointer border border-red-200"
+                  >
+                    Reset All Filters
+                  </button>
+                </div>
+              ) : (
+                filteredNodes.map((node, index) => (
+                  <BookingNodeCard
+                    key={node.id}
+                    node={node}
+                    index={index}
+                    outgoingEdge={outgoingEdgeMap.get(node.id)}
+                    isImpacted={impactReasonMap.has(node.id)}
+                    impactReason={impactReasonMap.get(node.id)}
+                    onSimulateDisruption={(bookingId) => {
+                      setSimulateTargetId(bookingId);
+                      setIsSimulateModalOpen(true);
+                    }}
+                  />
+                ))
+              )}
             </div>
           )}
         </div>

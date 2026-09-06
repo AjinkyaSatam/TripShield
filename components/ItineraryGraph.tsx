@@ -13,6 +13,22 @@ interface ItineraryGraphProps {
   onSimulateDisruption?: (bookingId: string) => void;
 }
 
+function getIcon(type: string) {
+  switch (type.toUpperCase()) {
+    case 'FLIGHT':
+      return Plane;
+    case 'HOTEL':
+      return Hotel;
+    case 'TRANSFER':
+      return Car;
+    case 'EVENT':
+      return Calendar;
+    case 'ACTIVITY':
+    default:
+      return Ticket;
+  }
+}
+
 export function ItineraryGraph({
   nodes,
   edges,
@@ -23,21 +39,11 @@ export function ItineraryGraph({
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
 
-  const getIcon = (type: string) => {
-    switch (type.toUpperCase()) {
-      case 'FLIGHT':
-        return Plane;
-      case 'HOTEL':
-        return Hotel;
-      case 'TRANSFER':
-        return Car;
-      case 'EVENT':
-        return Calendar;
-      case 'ACTIVITY':
-      default:
-        return Ticket;
-    }
-  };
+  const rootBrokenId = impact?.disruptedBookingId;
+  const impactedMap = new Map<string, NonNullable<typeof impact>['impactedNodes'][0]>();
+  if (impact?.impactedNodes) {
+    impact.impactedNodes.forEach((n) => impactedMap.set(n.bookingId, n));
+  }
 
   const nodeWidth = 200;
   const nodeHeight = 90;
@@ -80,8 +86,14 @@ export function ItineraryGraph({
           </p>
         </div>
 
-        {/* Zoom Controls */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        {/* Cascade Status & Zoom Controls */}
+        <div className="flex items-center gap-3 self-start sm:self-auto flex-wrap">
+          {impact && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-100 text-red-700 border border-red-200 text-xs font-bold animate-fadeIn">
+              <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+              <span>Cascade Active: {impact.impactedNodes.length + 1} Nodes Affected</span>
+            </div>
+          )}
           <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-slate-600">
             <button
               onClick={() => setZoom((z) => Math.max(0.7, z - 0.1))}
@@ -143,8 +155,15 @@ export function ItineraryGraph({
 
               const toNode = nodes.find((n) => n.id === edge.toBookingId);
 
+              const isCascadeEdge =
+                edge.fromBookingId === rootBrokenId ||
+                impactedMap.has(edge.toBookingId) ||
+                impactedMap.has(edge.fromBookingId);
+
               const isEdgeDisrupted =
-                toNode?.status === 'disrupted' || edge.bufferMinutes < edge.minRequiredBufferMinutes;
+                isCascadeEdge ||
+                toNode?.status === 'disrupted' ||
+                edge.bufferMinutes < edge.minRequiredBufferMinutes;
               const isEdgeAtRisk =
                 toNode?.status === 'at_risk' ||
                 (!isEdgeDisrupted && edge.bufferMinutes - edge.minRequiredBufferMinutes <= 20);
@@ -228,16 +247,27 @@ export function ItineraryGraph({
             const pos = nodePositions.get(node.id);
             if (!pos) return null;
 
-            const Icon = getIcon(node.type);
-            const isDisrupted = node.status === 'disrupted';
-            const isAtRisk = node.status === 'at_risk';
+            const NodeIcon = getIcon(node.type);
+            const isRootIncident = node.id === rootBrokenId;
+            const isCascadeImpacted = impactedMap.has(node.id);
+            const impactDetail = impactedMap.get(node.id);
+            const isDisrupted = node.status === 'disrupted' || isRootIncident || impactDetail?.severity === 'disrupted';
+            const isAtRisk = node.status === 'at_risk' || impactDetail?.severity === 'at_risk';
             const isRebooked = node.status === 'rebooked';
             const isSelected = selectedNodeId === node.id;
 
             let cardBg = 'bg-white border-slate-200 shadow-xs';
             let glow = '';
 
-            if (isDisrupted) {
+            if (isRootIncident) {
+              cardBg = 'bg-red-50 border-red-600 shadow-xl shadow-red-200';
+              glow = 'ring-4 ring-red-500/70 animate-pulse';
+            } else if (isCascadeImpacted) {
+              cardBg = impactDetail?.severity === 'disrupted'
+                ? 'bg-red-50/90 border-red-500 shadow-md shadow-red-100'
+                : 'bg-amber-50/90 border-amber-500 shadow-md shadow-amber-100';
+              glow = 'ring-2 ring-red-400/50';
+            } else if (isDisrupted) {
               cardBg = 'bg-red-50 border-red-500 shadow-lg shadow-red-100';
               glow = 'ring-2 ring-red-500/50 animate-pulse';
             } else if (isAtRisk) {
@@ -284,7 +314,7 @@ export function ItineraryGraph({
                         ? 'bg-blue-100 text-blue-600'
                         : 'bg-red-50 text-red-600'
                     }`}>
-                      <Icon size={14} />
+                      <NodeIcon size={14} />
                     </div>
                     <span className="text-[10px] text-slate-500 font-bold uppercase truncate">
                       Leg #{index + 1}
@@ -292,7 +322,11 @@ export function ItineraryGraph({
                   </div>
 
                   <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase ${
-                    isDisrupted
+                    isRootIncident
+                      ? 'bg-red-600 text-white shadow-xs'
+                      : isCascadeImpacted
+                      ? 'bg-red-100 text-red-700 border border-red-200'
+                      : isDisrupted
                       ? 'bg-red-100 text-red-700 border border-red-200'
                       : isAtRisk
                       ? 'bg-amber-100 text-amber-800 border border-amber-200'
@@ -300,7 +334,7 @@ export function ItineraryGraph({
                       ? 'bg-blue-100 text-blue-700 border border-blue-200'
                       : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
                   }`}>
-                    {node.status}
+                    {isRootIncident ? 'Root Trigger' : isCascadeImpacted ? 'Cascade' : node.status}
                   </span>
                 </div>
 

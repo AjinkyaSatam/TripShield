@@ -152,8 +152,27 @@ export default function TripShieldApp() {
   };
 
   useEffect(() => {
-    loadUser();
-    loadTrips();
+    let isMounted = true;
+    const initialize = async () => {
+      try {
+        const userRes = await fetch('/api/auth/me');
+        const userData = await userRes.json();
+        if (isMounted && userData.success && userData.user) {
+          setCurrentUser(userData.user);
+        }
+      } catch (err) {
+        console.error('Error checking user session:', err);
+      }
+
+      if (isMounted) {
+        await loadTrips();
+      }
+    };
+
+    initialize();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleTripSwitch = (tripId: string) => {

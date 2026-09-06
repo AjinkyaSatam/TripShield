@@ -1,5 +1,3 @@
-import { GraphNode } from '../graph/types';
-
 export interface RecoveryAction {
   actionType: 'rebook' | 'shift' | 'cancel';
   targetBookingId: string;

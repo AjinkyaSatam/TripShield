@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Check, User, Sparkles, Building2, Users, ArrowRight, X, Lock } from 'lucide-react';
+import { Shield, Check, ArrowRight, X, Lock } from 'lucide-react';
 
 export interface TravelerProfile {
   id: string;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GraphNode } from '@/lib/graph/types';
-import { AlertOctagon, X, Zap, Clock, ShieldAlert } from 'lucide-react';
+import { AlertOctagon, X, Zap } from 'lucide-react';
 
 interface DisruptionModalProps {
   isOpen: boolean;

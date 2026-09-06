@@ -56,6 +56,11 @@ export function ConfirmationDiffModal({
             <h2 className="text-2xl font-black text-slate-900 mt-1">
               Itinerary Repaired & Live
             </h2>
+            {planTitle && (
+              <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                Applied Plan: {planTitle}
+              </p>
+            )}
           </div>
         </div>
 

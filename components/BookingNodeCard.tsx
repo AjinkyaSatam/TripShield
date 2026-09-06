@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, Hotel, Car, Calendar, Ticket, ChevronDown, ChevronUp, Clock, MapPin, DollarSign, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Plane, Hotel, Car, Calendar, Ticket, ChevronDown, ChevronUp, Clock, MapPin, ShieldAlert, ArrowRight } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { GraphNode, GraphEdge } from '@/lib/graph/types';
 import { formatINR } from '@/lib/format';
@@ -13,6 +13,22 @@ interface BookingNodeCardProps {
   index: number;
 }
 
+function getCategoryIcon(type: string) {
+  switch (type.toUpperCase()) {
+    case 'FLIGHT':
+      return Plane;
+    case 'HOTEL':
+      return Hotel;
+    case 'TRANSFER':
+      return Car;
+    case 'EVENT':
+      return Calendar;
+    case 'ACTIVITY':
+    default:
+      return Ticket;
+  }
+}
+
 export function BookingNodeCard({
   node,
   outgoingEdge,
@@ -22,24 +38,7 @@ export function BookingNodeCard({
   index,
 }: BookingNodeCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const getCategoryIcon = (type: string) => {
-    switch (type.toUpperCase()) {
-      case 'FLIGHT':
-        return Plane;
-      case 'HOTEL':
-        return Hotel;
-      case 'TRANSFER':
-        return Car;
-      case 'EVENT':
-        return Calendar;
-      case 'ACTIVITY':
-      default:
-        return Ticket;
-    }
-  };
-
-  const Icon = getCategoryIcon(node.type);
+  const CategoryIcon = getCategoryIcon(node.type);
 
   const formatTime = (d: Date | string) => {
     const date = new Date(d);
@@ -59,7 +58,7 @@ export function BookingNodeCard({
   };
 
   const isDisrupted = node.status === 'disrupted';
-  const isAtRisk = node.status === 'at_risk';
+  const isAtRisk = node.status === 'at_risk' || (isImpacted && !isDisrupted);
   const isRebooked = node.status === 'rebooked';
 
   let borderStyle = 'border-slate-200 hover:border-slate-300';
@@ -93,7 +92,7 @@ export function BookingNodeCard({
                   ? 'bg-blue-100 text-blue-600 border border-blue-200'
                   : 'bg-red-50 text-red-600 border border-red-100'
               }`}>
-                <Icon size={22} />
+                <CategoryIcon size={22} />
               </div>
 
               <div>

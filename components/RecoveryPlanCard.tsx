@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FormattedRecoveryOption, RecoveryAction } from '@/lib/recovery/types';
-import { Sparkles, Check, ChevronDown, ChevronUp, DollarSign, Clock, ShieldCheck, AlertCircle, ArrowRight, Award } from 'lucide-react';
+import { FormattedRecoveryOption } from '@/lib/recovery/types';
+import { Sparkles, Check, ChevronDown, ChevronUp, ShieldCheck, AlertCircle, ArrowRight, Award } from 'lucide-react';
 import { formatINR, formatINRDelta } from '@/lib/format';
 
 interface RecoveryPlanCardProps {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldAlert, AlertTriangle, ChevronDown, ChevronUp, Clock, Info } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp, Clock, Info } from 'lucide-react';
 import { RiskWarning } from '@/lib/graph/types';
 
 interface ProactiveRiskPanelProps {

@@ -33,7 +33,7 @@ async function testApiRoutes() {
   console.log(`✓ Proactive risks detected: ${tripData.proactiveRisks.length}`);
 
   // 4. POST /api/disruptions/simulate
-  const targetBooking = tripData.trip.bookings.find((b: any) => b.title.includes('DL 412'));
+  const targetBooking = tripData.trip.bookings.find((b: { id: string; title: string }) => b.title.includes('DL 412'));
   console.log(`\n4. Testing POST /api/disruptions/simulate on "${targetBooking.title}"...`);
   const simReq = new Request('http://localhost:3000/api/disruptions/simulate', {
     method: 'POST',
@@ -83,7 +83,7 @@ async function testApiRoutes() {
   const applyData = await applyRes.json();
   console.log('✓ Applied response message:', applyData.message);
   console.log('✓ Changed bookings diff:', applyData.diff.changedBookings.length, 'booking(s) modified:');
-  applyData.diff.changedBookings.forEach((cb: any) => {
+  applyData.diff.changedBookings.forEach((cb: { title: string; newTitle: string; newStatus: string }) => {
     console.log(`   • ${cb.title} -> ${cb.newTitle} (${cb.newStatus})`);
   });
 

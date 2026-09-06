@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "test": "npm run test:engine",
+    "test:engine": "tsx scripts/test-core-engine.ts",
+    "test:api": "tsx scripts/test-api-routes.ts",
+    "test:auth": "tsx scripts/test-auth-flow.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.33.1",

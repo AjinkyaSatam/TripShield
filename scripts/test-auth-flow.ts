@@ -1,6 +1,4 @@
 import { POST as loginUser } from '../app/api/auth/login/route';
-import { POST as signupUser } from '../app/api/auth/signup/route';
-import { GET as getMe } from '../app/api/auth/me/route';
 import { POST as demoSwitch } from '../app/api/auth/demo-switch/route';
 import { hashPassword, verifyPassword, signToken, verifyToken } from '../lib/auth';
 

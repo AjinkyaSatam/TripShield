@@ -4,6 +4,7 @@ import { analyzeImpact } from '../lib/graph/impact';
 import { generateCandidateOptions } from '../lib/recovery/ruleEngine';
 import { rankAndExplainRecoveryPlans } from '../lib/ai/claude';
 import { scanProactiveRisks } from '../lib/graph/riskScan';
+import { formatINR, formatINRDelta } from '../lib/format';
 
 async function testCoreEngine() {
   console.log('🧪 Starting TripShield AI Core Engine Verification...');
@@ -65,7 +66,7 @@ async function testCoreEngine() {
   console.log(`✓ Generated and scored ${candidates.length} recovery candidates:`);
   candidates.forEach((c, idx) => {
     console.log(`   #${idx + 1} [Score: ${c.convenienceScore}/100] ${c.candidateTitle}`);
-    console.log(`      Cost Delta: ${c.costDelta > 0 ? '+' : ''}$${c.costDelta} | Time Delta: ${c.timeDeltaMinutes}m | Disruption %: ${c.itineraryDisruptionPct * 100}%`);
+    console.log(`      Cost Delta: ${formatINRDelta(c.costDelta)} | Time Delta: ${c.timeDeltaMinutes}m | Disruption %: ${Math.round(c.itineraryDisruptionPct * 100)}%`);
     console.log(`      Actions required: ${c.proposedActions.length}`);
   });
 
@@ -81,7 +82,7 @@ async function testCoreEngine() {
   console.log(`✓ Recovery Plan successfully generated! (Source: ${plan.source})`);
   plan.options.forEach((opt) => {
     console.log(`\n   ⭐ Option ${opt.rank}: ${opt.title}`);
-    console.log(`      Cost: $${opt.totalCost} (${opt.costDelta >= 0 ? '+' : ''}$${opt.costDelta}) | Convenience: ${opt.convenienceScore}/100`);
+    console.log(`      Cost: ${formatINR(opt.totalCost)} (${formatINRDelta(opt.costDelta)}) | Convenience: ${opt.convenienceScore}/100`);
     console.log(`      Rationale: "${opt.rationale}"`);
     console.log(`      Caveats: "${opt.caveats}"`);
     console.log(`      Actions:`);

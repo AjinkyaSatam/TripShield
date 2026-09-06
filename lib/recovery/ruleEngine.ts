@@ -1,4 +1,3 @@
-import { MockInventoryItem } from '@prisma/client';
 import { prisma } from '../prisma';
 import { GraphNode, ImpactAnalysisResult, ItineraryGraph } from '../graph/types';
 import { ScoredCandidate, RecoveryAction } from './types';
@@ -46,7 +45,7 @@ export async function generateCandidateOptions(
   const scoredCandidates: ScoredCandidate[] = [];
 
   for (const item of candidatesPool) {
-    let metadata: any = {};
+    let metadata: Record<string, any> = {};
     try {
       if (item.metadata) metadata = JSON.parse(item.metadata);
     } catch {
@@ -162,7 +161,7 @@ export async function generateCandidateOptions(
     let candidateTitle = item.name;
     let candidateDescription = `${item.provider} (${item.location})`;
     if (metadata.direct) {
-      candidateTitle = `Direct Re-route: ${item.name}`;
+      candidateTitle = item.name.startsWith('Direct Re-route:') ? item.name : `Direct Re-route: ${item.name}`;
       candidateDescription = `Nonstop flight bypassing the layover bottleneck entirely. Arrives on schedule.`;
     } else if (costDelta <= 0) {
       candidateTitle = `Budget Shield: ${item.name}`;

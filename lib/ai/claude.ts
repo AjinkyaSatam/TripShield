@@ -206,8 +206,9 @@ export async function rankAndExplainRecoveryPlans(
     }
 
     throw new Error('Could not parse structured JSON from Claude response');
-  } catch (err: any) {
-    console.warn('⚠️ [TripShield AI] Claude API error or timeout, falling back safely to rule engine:', err?.message || err);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn('⚠️ [TripShield AI] Claude API error or timeout, falling back safely to rule engine:', message);
     return {
       planId,
       disruptionId: impact.disruptionId,

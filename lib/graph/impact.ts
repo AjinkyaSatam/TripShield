@@ -151,6 +151,7 @@ export function analyzeImpact(
     disruptedBooking: rootNode,
     impactType: disruptionType,
     delayMinutes,
+    reason,
     impactedNodes,
     totalAffectedBookings: impactedNodes.length + 1, // root + impacted
     timestamp: new Date().toISOString(),

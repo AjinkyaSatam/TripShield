@@ -19,7 +19,7 @@ export interface BookingDetails {
   experience?: string;
   trainNumber?: string;
   coach?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GraphNode {
@@ -76,6 +76,7 @@ export interface ImpactAnalysisResult {
   disruptedBooking: GraphNode;
   impactType: 'delay' | 'cancellation' | 'overbooking' | 'weather';
   delayMinutes: number;
+  reason?: string;
   impactedNodes: ImpactedNode[];
   totalAffectedBookings: number;
   timestamp: string;

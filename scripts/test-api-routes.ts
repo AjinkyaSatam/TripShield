@@ -67,7 +67,10 @@ async function testApiRoutes() {
   const plansData = await plansRes.json();
   console.log(`✓ Recovery Plans returned (Source: ${plansData.source}): ${plansData.plan.options.length} options`);
   const firstOption = plansData.plan.options[0];
-  console.log(`   Top option: "${firstOption.title}" (Score: ${firstOption.convenienceScore}, Cost: $${firstOption.costDelta})`);
+  const formattedCostDelta = firstOption.costDelta === 0
+    ? '₹0'
+    : `${firstOption.costDelta < 0 ? '-' : '+'}₹${Math.abs(firstOption.costDelta).toLocaleString('en-IN')}`;
+  console.log(`   Top option: "${firstOption.title}" (Score: ${firstOption.convenienceScore}, Cost: ${formattedCostDelta})`);
   const planId = plansData.plan.id;
   const optionId = firstOption.id;
 

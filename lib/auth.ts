@@ -83,25 +83,33 @@ export async function createDatabaseSession(userId: string) {
 
 // 4. Cookie Helpers (for Route Handlers)
 export async function setAuthCookie(token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: SESSION_EXPIRY_DAYS * 24 * 60 * 60,
-  });
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: SESSION_EXPIRY_DAYS * 24 * 60 * 60,
+    });
+  } catch {
+    // Gracefully handle invocation outside request scope (e.g. standalone test scripts)
+  }
 }
 
 export async function clearAuthCookie() {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set(COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 0,
+    });
+  } catch {
+    // Gracefully handle invocation outside request scope (e.g. standalone test scripts)
+  }
 }
 
 // 5. Retrieve Current Authenticated User from Request

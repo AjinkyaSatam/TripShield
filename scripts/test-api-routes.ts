@@ -5,6 +5,7 @@ import { GET as getDisruptionImpact } from '../app/api/disruptions/[id]/impact/r
 import { GET as getRecoveryPlans } from '../app/api/disruptions/[id]/recovery-plans/route';
 import { POST as applyRecoveryPlan } from '../app/api/recovery-plans/[id]/apply/route';
 import { GET as getRiskWarnings } from '../app/api/trips/[id]/risk-warnings/route';
+import { POST as addBooking } from '../app/api/trips/[id]/bookings/route';
 import { POST as resetDb } from '../app/api/seed/reset/route';
 
 async function testApiRoutes() {
@@ -97,6 +98,31 @@ async function testApiRoutes() {
   });
   const risksData = await risksRes.json();
   console.log(`✓ Post-recovery proactive risk count: ${risksData.totalRisks}`);
+
+  // 9. POST /api/trips/[id]/bookings (Dynamic Node Insertion)
+  console.log(`\n9. Testing POST /api/trips/${tripId}/bookings (Dynamic Node Insertion)...`);
+  const newBookingReq = new Request(`http://localhost:3000/api/trips/${tripId}/bookings`, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'TRANSFER',
+      provider: 'Blacklane VIP Chauffeur',
+      title: 'Airport Transfer: LHR Terminal 5 → The Savoy',
+      location: 'LHR to Central London',
+      cost: 11500,
+      startTime: '2026-09-16T12:00:00Z',
+      endTime: '2026-09-16T13:30:00Z',
+      cancellationPolicy: 'Free cancellation up to 4 hours before pickup',
+      refundable: true,
+    }),
+  });
+  const addBookingRes = await addBooking(newBookingReq, {
+    params: Promise.resolve({ id: tripId }),
+  });
+  const addBookingData = await addBookingRes.json();
+  if (!addBookingData.success || !addBookingData.isDAG) {
+    throw new Error('Add booking failed or breached DAG cycle freedom: ' + JSON.stringify(addBookingData));
+  }
+  console.log(`✓ Node insertion verified: "${addBookingData.booking.title}" (DAG valid: ${addBookingData.isDAG}, Nodes: ${addBookingData.graph.nodes.length}, Edges: ${addBookingData.graph.edges.length})`);
 
   console.log('\n🎊 ALL API ROUTES VERIFIED END-TO-END WITH ZERO ERRORS!');
 }

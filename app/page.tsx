@@ -33,6 +33,7 @@ import {
   Printer,
   Copy,
   Search,
+  Plus,
 } from 'lucide-react';
 import { GraphNode, GraphEdge, ImpactAnalysisResult, RiskWarning } from '@/lib/graph/types';
 import { FormattedRecoveryOption, GeneratedRecoveryPlan } from '@/lib/recovery/types';
@@ -43,6 +44,7 @@ import { ImpactBanner } from '@/components/ImpactBanner';
 import { RecoveryPlanCard } from '@/components/RecoveryPlanCard';
 import { ProactiveRiskPanel } from '@/components/ProactiveRiskPanel';
 import { DisruptionModal } from '@/components/DisruptionModal';
+import { AddBookingModal } from '@/components/AddBookingModal';
 import { ConfirmationDiffModal } from '@/components/ConfirmationDiffModal';
 import { AuditReportModal } from '@/components/AuditReportModal';
 import { TravelerAuthModal, PRESET_TRAVELERS, TravelerProfile } from '@/components/TravelerAuthModal';
@@ -77,10 +79,12 @@ export default function TripShieldApp() {
   const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
   const [appliedDiff, setAppliedDiff] = useState<any>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isAddBookingModalOpen, setIsAddBookingModalOpen] = useState(false);
 
   // Loading States
   const [isLoadingTrip, setIsLoadingTrip] = useState(true);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [isAddingBooking, setIsAddingBooking] = useState(false);
   const [isGeneratingPlans, setIsGeneratingPlans] = useState(false);
   const [isApplyingPlan, setIsApplyingPlan] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
@@ -249,6 +253,33 @@ export default function TripShieldApp() {
     }
   };
 
+  const handleAddBooking = async (bookingData: any) => {
+    if (!selectedTripId) return;
+
+    try {
+      setIsAddingBooking(true);
+      const res = await fetch(`/api/trips/${selectedTripId}/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setIsAddBookingModalOpen(false);
+        await loadTripDetails(selectedTripId);
+        showToast(data.message || `Booking "${bookingData.title}" added to itinerary DAG!`);
+      } else {
+        showToast(`Failed to add booking: ${data.error}`);
+      }
+    } catch (err) {
+      console.error('Error adding booking:', err);
+      showToast('Error inserting booking node.');
+    } finally {
+      setIsAddingBooking(false);
+    }
+  };
+
   const handleGenerateRecoveryPlans = async () => {
     if (!activeDisruptionId) return;
 
@@ -409,6 +440,16 @@ export default function TripShieldApp() {
             >
               <RotateCcw size={14} className={isResetting ? 'animate-spin' : ''} />
               <span className="hidden md:inline">Reset</span>
+            </button>
+
+            {/* Add Custom Booking Leg */}
+            <button
+              onClick={() => setIsAddBookingModalOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              title="Add custom flight, hotel, or transfer to DAG"
+            >
+              <Plus size={14} />
+              <span className="hidden sm:inline">Add Leg</span>
             </button>
 
             {/* Simulate Disruption Trigger */}
@@ -802,6 +843,15 @@ export default function TripShieldApp() {
           )}
         </div>
       </div>
+
+      {/* Custom Booking Node Insertion Modal */}
+      <AddBookingModal
+        isOpen={isAddBookingModalOpen}
+        onClose={() => setIsAddBookingModalOpen(false)}
+        onAddBooking={handleAddBooking}
+        isLoading={isAddingBooking}
+        tripStartDate={trip?.startDate}
+      />
 
       {/* Disruption Simulator Modal */}
       <DisruptionModal

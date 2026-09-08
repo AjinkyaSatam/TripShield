@@ -34,6 +34,8 @@ import {
   Copy,
   Search,
   Plus,
+  Radio,
+  Download,
 } from 'lucide-react';
 import { GraphNode, GraphEdge, ImpactAnalysisResult, RiskWarning } from '@/lib/graph/types';
 import { FormattedRecoveryOption, GeneratedRecoveryPlan } from '@/lib/recovery/types';
@@ -47,8 +49,10 @@ import { DisruptionModal } from '@/components/DisruptionModal';
 import { AddBookingModal } from '@/components/AddBookingModal';
 import { ConfirmationDiffModal } from '@/components/ConfirmationDiffModal';
 import { AuditReportModal } from '@/components/AuditReportModal';
+import { EmergencyDispatchModal } from '@/components/EmergencyDispatchModal';
 import { TravelerAuthModal, PRESET_TRAVELERS, TravelerProfile } from '@/components/TravelerAuthModal';
 import { formatINR } from '@/lib/format';
+import { generateICSContent, triggerICSDownload } from '@/lib/export/ical';
 
 export default function TripShieldApp() {
   const router = useRouter();
@@ -80,6 +84,7 @@ export default function TripShieldApp() {
   const [appliedDiff, setAppliedDiff] = useState<any>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isAddBookingModalOpen, setIsAddBookingModalOpen] = useState(false);
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
 
   // Loading States
   const [isLoadingTrip, setIsLoadingTrip] = useState(true);
@@ -280,6 +285,14 @@ export default function TripShieldApp() {
     }
   };
 
+  const handleExportCalendar = () => {
+    if (!trip) return;
+    const icsString = generateICSContent(trip.name, travelerDisplayName, nodes);
+    const filename = `${trip.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_itinerary.ics`;
+    triggerICSDownload(filename, icsString);
+    showToast('Downloaded .ics calendar file with latest itinerary timings.');
+  };
+
   const handleGenerateRecoveryPlans = async () => {
     if (!activeDisruptionId) return;
 
@@ -420,7 +433,17 @@ export default function TripShieldApp() {
           </div>
 
           {/* Right Action Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            {/* Live Traveler Alert Center */}
+            <button
+              onClick={() => setIsDispatchModalOpen(true)}
+              className="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              title="Open Traveler Emergency Dispatch & WhatsApp Center"
+            >
+              <Radio size={14} className="text-emerald-600 animate-pulse" />
+              <span className="hidden sm:inline">Alert Center</span>
+            </button>
+
             {/* Audit Report */}
             <button
               onClick={() => setIsReportModalOpen(true)}
@@ -904,6 +927,18 @@ export default function TripShieldApp() {
         }}
       />
 
+      {/* Traveler Emergency Dispatch & Live Alert Stream Modal */}
+      <EmergencyDispatchModal
+        isOpen={isDispatchModalOpen}
+        onClose={() => setIsDispatchModalOpen(false)}
+        travelerName={travelerDisplayName}
+        phone={currentUser?.phone || '+91 98200 45192'}
+        tripName={trip?.name || 'European AI Summit & London Client Tour'}
+        nodes={nodes}
+        impact={activeImpact}
+        showToast={showToast}
+      />
+
       {/* Executive Disruption Audit Report Modal */}
       <AuditReportModal
         isOpen={isReportModalOpen}
@@ -916,6 +951,7 @@ export default function TripShieldApp() {
         activeImpact={activeImpact}
         rebookedCount={rebookedCount}
         showToast={showToast}
+        onExportICal={handleExportCalendar}
       />
     </main>
   );

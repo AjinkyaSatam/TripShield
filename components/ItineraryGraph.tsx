@@ -342,9 +342,16 @@ export function ItineraryGraph({
                   {node.title}
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 tabular-nums">
-                  <span>{startTimeStr}</span>
-                  <span className="text-slate-900 font-bold">{formatINR(node.cost)}</span>
+                <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1 tabular-nums">
+                  <span className="truncate max-w-[90px]">{startTimeStr}</span>
+                  <div className="flex items-center gap-1">
+                    {node.details?.coTravelers && node.details.coTravelers.length > 0 && (
+                      <span className="text-[8px] font-bold text-indigo-700 bg-indigo-50 px-1 py-0.2 rounded border border-indigo-200" title={`Shared with: ${node.details.coTravelers.join(', ')}`}>
+                        👥 Group
+                      </span>
+                    )}
+                    <span className="text-slate-900 font-bold">{formatINR(node.cost)}</span>
+                  </div>
                 </div>
               </div>
             );
@@ -358,7 +365,11 @@ export function ItineraryGraph({
           <span className="font-bold text-slate-900">Topology Status:</span>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-            <span>Confirmed</span>
+            <span>Normal</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+            <span>Shared Co-Traveler Leg</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />

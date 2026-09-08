@@ -131,6 +131,7 @@ export function analyzeImpact(
             originalBufferMinutes: edge.bufferMinutes,
             newBufferMinutes: newBuffer,
             minRequiredBufferMinutes: edge.minRequiredBufferMinutes,
+            coTravelers: (targetNode.details as any)?.coTravelers || [],
           });
 
           // Cascade further downstream if this node causes downstream ripples

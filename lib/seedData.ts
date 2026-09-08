@@ -271,6 +271,7 @@ export async function resetAndSeedDatabase() {
         service: 'Heathrow Express Business First + Black Cab to Strand',
         pickup: 'Heathrow Terminal 3 Station',
         dropoff: 'The Savoy London',
+        coTravelers: ['Marcus Vance (Global Tech Summits)'],
       }),
     },
   });
@@ -314,6 +315,7 @@ export async function resetAndSeedDatabase() {
         venue: 'One Canada Square, 38th Floor',
         host: 'Lord Alistair Sterling (Chairman)',
         agenda: 'Q3 Enterprise AI Rollout & Capital Allocation',
+        coTravelers: ['Marcus Vance (Global Tech Summits)', 'Elena Rostova (Observer)'],
       }),
     },
   });

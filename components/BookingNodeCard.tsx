@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, Hotel, Car, Calendar, Ticket, ChevronDown, ChevronUp, Clock, MapPin, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Plane, Hotel, Car, Calendar, Ticket, ChevronDown, ChevronUp, Clock, MapPin, ShieldAlert, ArrowRight, Users } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { GraphNode, GraphEdge } from '@/lib/graph/types';
 import { formatINR } from '@/lib/format';
@@ -108,6 +108,13 @@ export function BookingNodeCard({
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                   {node.title}
                 </h3>
+
+                {node.details?.coTravelers && node.details.coTravelers.length > 0 && (
+                  <div className="flex items-center gap-1.5 mt-1 text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-200/80 w-fit">
+                    <Users size={12} className="text-indigo-600" />
+                    <span>Shared with: {node.details.coTravelers.join(', ')}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -140,12 +147,20 @@ export function BookingNodeCard({
 
           {/* Impact Banner Warning */}
           {impactReason && (
-            <div className="mt-4 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3 text-xs text-red-800 animate-fadeIn">
-              <ShieldAlert size={18} className="text-red-600 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold text-red-900 uppercase tracking-wide mr-1.5">Cascading Impact:</span>
-                <span>{impactReason}</span>
+            <div className="mt-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-800 animate-fadeIn space-y-1.5">
+              <div className="flex items-start gap-3">
+                <ShieldAlert size={18} className="text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold text-red-900 uppercase tracking-wide mr-1.5">Cascading Impact:</span>
+                  <span>{impactReason}</span>
+                </div>
               </div>
+              {node.details?.coTravelers && node.details.coTravelers.length > 0 && (
+                <div className="ml-7 flex items-center gap-1.5 text-[11px] font-bold text-indigo-800 bg-white/90 px-2.5 py-1 rounded-lg border border-indigo-200">
+                  <Users size={13} className="text-indigo-600 shrink-0" />
+                  <span>Group Coordination Alert: Co-travelers ({node.details.coTravelers.join(', ')}) notified of schedule displacement.</span>
+                </div>
+              )}
             </div>
           )}
 

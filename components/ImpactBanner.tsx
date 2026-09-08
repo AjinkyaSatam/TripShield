@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertOctagon, ArrowRight, ShieldAlert, Sparkles, Clock } from 'lucide-react';
+import { AlertOctagon, ArrowRight, ShieldAlert, Sparkles, Clock, Users } from 'lucide-react';
 import { ImpactAnalysisResult } from '@/lib/graph/types';
 
 interface ImpactBannerProps {
@@ -84,28 +84,39 @@ export function ImpactBanner({
           {impact.impactedNodes.map((item, idx) => (
             <div
               key={item.bookingId}
-              className="p-4 rounded-2xl bg-white text-slate-900 border border-red-100 shadow-md text-xs space-y-2"
+              className="p-4 rounded-2xl bg-white text-slate-900 border border-red-100 shadow-md text-xs space-y-2 flex flex-col justify-between"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] text-slate-500 font-bold uppercase">
-                  Ripple #{idx + 1}
-                </span>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-black ${
-                  item.severity === 'disrupted'
-                    ? 'bg-red-100 text-red-700 border border-red-200'
-                    : 'bg-amber-100 text-amber-800 border border-amber-200'
-                }`}>
-                  {item.severity}
-                </span>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">
+                    Ripple #{idx + 1}
+                  </span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-black ${
+                    item.severity === 'disrupted'
+                      ? 'bg-red-100 text-red-700 border border-red-200'
+                      : 'bg-amber-100 text-amber-800 border border-amber-200'
+                  }`}>
+                    {item.severity}
+                  </span>
+                </div>
+
+                <div className="font-bold text-sm text-slate-900 truncate" title={item.booking.title}>
+                  {item.booking.title}
+                </div>
+
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  {item.reason}
+                </p>
               </div>
 
-              <div className="font-bold text-sm text-slate-900 truncate" title={item.booking.title}>
-                {item.booking.title}
-              </div>
-
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                {item.reason}
-              </p>
+              {item.coTravelers && item.coTravelers.length > 0 && (
+                <div className="pt-2 border-t border-slate-100">
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 text-[10px] font-bold">
+                    <Users size={12} className="text-indigo-600 shrink-0" />
+                    <span className="truncate">Shared with: {item.coTravelers.join(', ')}</span>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

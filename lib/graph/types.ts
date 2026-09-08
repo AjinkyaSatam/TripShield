@@ -19,6 +19,7 @@ export interface BookingDetails {
   experience?: string;
   trainNumber?: string;
   coach?: string;
+  coTravelers?: string[];
   [key: string]: unknown;
 }
 
@@ -68,6 +69,7 @@ export interface ImpactedNode {
   originalBufferMinutes?: number;
   newBufferMinutes?: number;
   minRequiredBufferMinutes?: number;
+  coTravelers?: string[];
 }
 
 export interface ImpactAnalysisResult {
